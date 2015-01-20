@@ -116,6 +116,29 @@
         "prerequisites" : ["wallet_unlocked"]
       },
       {
+          "method_name": "wallet_import_bitshares",
+          "description": "Imports a BitShares wallet",
+          "return_type": "uint32_t",
+          "parameters" : [
+          {
+              "name" : "wallet_filename",
+              "type" : "filename",
+              "description" : "the Bitshares wallet file path"
+          },
+          {
+              "name" : "passphrase",
+              "type" : "passphrase",
+              "description" : "the imported wallet's password"
+          },
+          {
+              "name" : "account_name",
+              "type" : "account_name",
+              "description" : "the account to receive the contents of the wallet"
+          }
+          ],
+          "prerequisites" : ["wallet_unlocked"]
+      },
+      {
         "method_name": "wallet_import_electrum",
         "description": "Imports an Electrum wallet",
         "return_type": "uint32_t",

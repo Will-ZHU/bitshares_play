@@ -23,7 +23,7 @@ target_link_libraries( bts_key_info fc bts_blockchain bts_utilities)
 # to avoid a circular dependency.  The circular dependency could be broken more cleanly
 # by splitting bts_blockchain, but it doesn't seem worth it just for this
 add_executable( bts_genesis_to_bin bts_genesis_to_bin.cpp ${CMAKE_CURRENT_SOURCE_DIR}/../../libraries/blockchain/types.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../libraries/blockchain/pts_address.cpp )
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../libraries/blockchain/pts_address.cpp ${CMAKE_CURRENT_SOURCE_DIR}/../../libraries/blockchain/address.cpp)
 target_link_libraries( bts_genesis_to_bin fc )
 target_include_directories( bts_genesis_to_bin PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../../libraries/blockchain/include" )
 

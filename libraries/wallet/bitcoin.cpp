@@ -125,3 +125,44 @@ void wallet::import_keyhotee( const std::string& firstname,
     scan_chain( 0, 1 );
     ulog( "Successfully imported Keyhotee private key.\n" );
 } FC_CAPTURE_AND_RETHROW( (firstname)(middlename)(lastname)(brainkey)(keyhoteeid) ) }
+
+
+uint32_t wallet::import_bitshares_wallet(
+                                         const path& wallet_dat,
+                                         const string& wallet_dat_passphrase,
+                                         const string& account_name
+                                         )
+{
+    try {
+        if( !my->_blockchain->is_valid_account_name( account_name ) )
+            FC_THROW_EXCEPTION( invalid_name, "Invalid account name!", ("account_name",account_name) );
+        
+        FC_ASSERT( is_open() );
+        FC_ASSERT( is_unlocked() );
+        
+        blockchain::address::set_cur_addr_prefix("BTS");
+
+        
+        wallet_db db;
+        db.open(wallet_dat);
+
+        auto wallet_password = fc::sha512::hash( wallet_dat_passphrase.c_str(), wallet_dat_passphrase.size() );
+
+        // Collect private keys
+        const auto account_keys = db.get_account_private_keys( wallet_password );
+        vector<private_key_type> private_keys;
+        private_keys.reserve( account_keys.size() );
+        for( const auto& item : account_keys )
+            private_keys.push_back( item.first );
+        
+        blockchain::address::set_cur_addr_prefix("");
+        
+        
+        for( const auto& key : private_keys )
+            import_private_key( key, account_name );
+        
+        scan_chain( 0, 1 );
+        ulog( "Successfully imported ${x} keys from ${file}", ("x",private_keys.size())("file",wallet_dat.filename()) );
+        return private_keys.size();
+    } FC_CAPTURE_AND_RETHROW( (wallet_dat)(account_name) )
+}

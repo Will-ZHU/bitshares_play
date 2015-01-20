@@ -40,6 +40,13 @@ namespace bts { namespace blockchain {
        explicit operator    std::string()const; ///< converts to base58 + checksum
 
        fc::ripemd160      addr;
+       
+       static std::string get_cur_addr_prefix();
+       static void set_cur_addr_prefix(std::string s);
+       
+    private:
+       static std::string cur_addr_prefix;
+       
    };
    inline bool operator == ( const address& a, const address& b ) { return a.addr == b.addr; }
    inline bool operator != ( const address& a, const address& b ) { return a.addr != b.addr; }

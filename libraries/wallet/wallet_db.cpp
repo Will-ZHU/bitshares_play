@@ -38,8 +38,30 @@ namespace bts { namespace wallet {
                        load_master_key_record( record.as<wallet_master_key_record>() );
                        break;
                    case account_record_type:
-                       load_account_record( record.as<wallet_account_record>() );
+                   {
+//                       try{
+                           wallet_account_record r = record.as<wallet_account_record>();
+                           load_account_record(  r);
+//                       }
+//                       catch( fc::exception& er ) {
+//                           auto str = er.to_detail_string();
+//                           
+//                           wlog( "warning .... \n${e}",("e",str) );
+//                       } catch( const std::exception& e ) {
+//                           
+//                           auto str_what = e.what();
+//                           auto str_name = typeid(e).name();
+//                           
+//                           wlog( "warning .... \n${w}{n}",("w",str_what)("n", str_name) );
+//
+//                       } catch( ... ) {
+//                           
+//                           auto e = std::current_exception();
+//                           e = e;
+//                       }
                        break;
+                   }
+
                    case key_record_type:
                        load_key_record( record.as<wallet_key_record>() );
                        break;

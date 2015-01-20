@@ -17,7 +17,13 @@ namespace bts { namespace blockchain {
 
     public_key_type::public_key_type( const std::string& base58str )
     {
-       std::string prefix( BTS_ADDRESS_PREFIX );
+        std::string prefix( BTS_ADDRESS_PREFIX );
+        
+        std::string cur_prefix = address::get_cur_addr_prefix();
+        if(cur_prefix != ""){
+            prefix = cur_prefix;
+        }
+        
        const size_t prefix_len = prefix.size();
        FC_ASSERT( base58str.size() > prefix_len );
        FC_ASSERT( base58str.substr( 0, prefix_len ) ==  prefix , "", ("base58str", base58str) );
@@ -39,11 +45,18 @@ namespace bts { namespace blockchain {
 
     public_key_type::operator std::string() const
     {
+        std::string prefix( BTS_ADDRESS_PREFIX );
+        
+        std::string cur_prefix = address::get_cur_addr_prefix();
+        if(cur_prefix != ""){
+            prefix = cur_prefix;
+        }
+        
        binary_key k;
        k.data = key_data;
        k.check = fc::ripemd160::hash( k.data.data, k.data.size() )._hash[0];
        auto data = fc::raw::pack( k );
-       return BTS_ADDRESS_PREFIX + fc::to_base58( data.data(), data.size() );
+       return prefix + fc::to_base58( data.data(), data.size() );
     }
 
     bool operator == ( const public_key_type& p1, const fc::ecc::public_key& p2)

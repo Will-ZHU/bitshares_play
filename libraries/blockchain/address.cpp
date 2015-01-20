@@ -6,12 +6,21 @@
 
 namespace bts {
   namespace blockchain {
+      
+      std::string address::cur_addr_prefix ="";
+      
    address::address(){}
 
    address::address( const std::string& base58str )
    {
       FC_ASSERT( is_valid( base58str ) );
-      std::string prefix( BTS_ADDRESS_PREFIX );
+       
+       std::string prefix( BTS_ADDRESS_PREFIX );
+       
+       if(cur_addr_prefix != ""){
+           prefix = cur_addr_prefix;
+       }
+
       std::vector<char> v = fc::from_base58( base58str.substr( prefix.size() ) );
       memcpy( (char*)addr._hash, v.data(), std::min<size_t>( v.size()-4, sizeof( addr ) ) );
    }
@@ -31,6 +40,11 @@ namespace bts {
    bool address::is_valid( const std::string& base58str )
    { try {
       std::string prefix( BTS_ADDRESS_PREFIX );
+       
+       if(cur_addr_prefix != ""){
+           prefix = cur_addr_prefix;
+       }
+       
       const size_t prefix_len = prefix.size();
       FC_ASSERT( base58str.size() > prefix_len );
       FC_ASSERT( base58str.substr( 0, prefix_len ) == prefix );
@@ -65,12 +79,24 @@ namespace bts {
 
    address::operator std::string()const
    {
+       std::string prefix( BTS_ADDRESS_PREFIX );
+
+       if(cur_addr_prefix != ""){
+           prefix = cur_addr_prefix;
+       }
+       
         fc::array<char,24> bin_addr;
         memcpy( (char*)&bin_addr, (char*)&addr, sizeof( addr ) );
         auto checksum = fc::ripemd160::hash( (char*)&addr, sizeof( addr ) );
         memcpy( ((char*)&bin_addr)+20, (char*)&checksum._hash[0], 4 );
-        return BTS_ADDRESS_PREFIX + fc::to_base58( bin_addr.data, sizeof( bin_addr ) );
+        return prefix + fc::to_base58( bin_addr.data, sizeof( bin_addr ) );
    }
+      
+      std::string address::get_cur_addr_prefix(){ return cur_addr_prefix;}
+      void address::set_cur_addr_prefix(std::string s)
+      {
+          cur_addr_prefix =s;
+      }
 
 } } // namespace bts::blockchain
 

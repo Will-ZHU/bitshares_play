@@ -237,6 +237,12 @@ namespace bts { namespace wallet {
                  const string& wallet_dat_passphrase,
                  const string& account_name
                  );
+       
+       uint32_t import_bitshares_wallet(
+                 const path& wallet_dat,
+                 const string& wallet_dat_passphrase,
+                 const string& account_name
+                 );
 
          void import_keyhotee( const string& firstname,
                             const string& middlename,

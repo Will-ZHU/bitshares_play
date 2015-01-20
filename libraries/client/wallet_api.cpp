@@ -836,6 +836,31 @@ uint32_t detail::client_impl::wallet_import_bitcoin(
   _wallet->auto_backup( "bitcoin_import" );
   return count;
 }
+    
+    uint32_t detail::client_impl::wallet_import_bitshares(
+                                                          const fc::path& filename,
+                                                          const string& passphrase,
+                                                          const string& account_name
+                                                          )
+    {
+        try
+        {
+            const auto count =_wallet->import_bitshares_wallet(filename, passphrase, account_name);
+            _wallet->auto_backup( "bitshares_import" );
+            return count;
+        }
+        catch ( const fc::canceled_exception& )
+        {
+            throw;
+        }
+        catch( const fc::exception& e )
+        {
+            ilog( "import_bitshares_wallet failed with empty password: ${e}", ("e",e.to_detail_string() ) );
+        }
+        
+
+        return 0;
+    }
 
 uint32_t detail::client_impl::wallet_import_electrum(
         const fc::path& filename,
