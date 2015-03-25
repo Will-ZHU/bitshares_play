@@ -36,7 +36,7 @@ BitShares OS X Build Instructions
 7. Clone the BitShares PLAY repository:
    ```
    git clone git@github.com:bitsuperlab/bitshares_play.git
-   cd bitshares
+   cd bitshares_play
    ```
 
 8. Build BitShares:
